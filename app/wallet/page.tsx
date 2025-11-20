@@ -2,8 +2,8 @@
 import { ethers } from "ethers";
 export default function walletConnection(){
     async function connectWallet(){
-        if(window.ethereum){
-             const provider = new ethers.BrowserProvider(window.ethereum);
+        if((window as any).ethereum){
+             const provider = new ethers.BrowserProvider((window as any).ethereum);
       const signer = await provider.getSigner();
       const account = await signer.getAddress();
         }
