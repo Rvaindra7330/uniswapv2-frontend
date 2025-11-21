@@ -1,52 +1,14 @@
 "use client"
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from 'react-toastify';
-import { ToastContainer } from 'react-toastify';
+import Link from "next/link";
+import { useWeb3 } from "@/hook/useWeb3";
 
 export default function WalletConnection() {
-  const [account, setAccount] = useState("");
-  const router = useRouter();
+  
+   const {account,connectWallet} = useWeb3()
 
-  async function connectWallet() {
-    try {
-      const ethereum = (window as any).ethereum;
-      if (!ethereum) {
-        toast.error("MetaMask not found");
-        return;
-      }
-
-      const provider = new ethers.BrowserProvider(ethereum);
-      await ethereum.request({ method: "eth_requestAccounts" });
-      const signer = await provider.getSigner();
-      const address = await signer.getAddress();
-
-      setAccount(address);
-      toast.success("Wallet connected!");
-
-      router.push("/swap");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to connect wallet");
-    }
-  }
-
-  useEffect(() => {
-    const ethereum = (window as any).ethereum;
-    if (!ethereum) return;
-
-    const handleAccountChange = () => connectWallet();
-
-    ethereum.on("accountsChanged", handleAccountChange);
-    return () => {
-      ethereum.removeListener("accountsChanged", handleAccountChange);
-    };
-  }, []);
-
+    
   return (
     <>
-      <ToastContainer />
 
       {!account ? (
         <div className="flex flex-col justify-center bg-slate-500 h-screen items-center">
@@ -59,7 +21,17 @@ export default function WalletConnection() {
           </button>
         </div>
       ) : (
-        <div>Redirecting to swap page…</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <Link href="/swap" className="border p-6 rounded-lg hover:shadow-lg transition">
+            <h2 className="text-xl font-semibold mb-2">💱 Swap Tokens</h2>
+            <p>Exchange TLR for BRP and vice versa</p>
+          </Link>
+          
+          <Link href="/liquidity" className="border p-6 rounded-lg hover:shadow-lg transition">
+            <h2 className="text-xl font-semibold mb-2">💧 Provide Liquidity</h2>
+            <p>Add tokens to the pool and earn fees</p>
+          </Link>
+        </div>
       )}
     </>
   );
