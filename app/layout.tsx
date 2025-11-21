@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* <nav className="border-b p-4">
+        <nav className="border-b p-4">
           <div className="container mx-auto flex justify-between">
             <h1 className="text-xl font-bold">Uniswap Clone</h1>
             <div className="space-x-4">
@@ -37,7 +37,7 @@ export default function RootLayout({
               <Link href="/liquidity" className="hover:underline">Liquidity</Link>
             </div>
           </div>
-        </nav> */}
+        </nav>
         {children}
       </body>
     </html>

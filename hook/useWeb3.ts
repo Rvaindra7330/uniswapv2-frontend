@@ -5,6 +5,7 @@ export const useWeb3 = ()=>{
     const [provider,setProvider]=useState<ethers.Provider | null>(null)
     const [signer,setSigner] = useState<ethers.Signer | null>(null)
     const [account,setAccount] = useState<String |null>('')
+    const [isConnected, setIsConnected]= useState(false)
 
     const connectWallet= async()=>{
         if((window as any).ethereum){
@@ -14,10 +15,11 @@ export const useWeb3 = ()=>{
             setProvider(provider)
             setSigner(signer)
             setAccount(account)
+            setIsConnected(true)
         } else{
             alert('Please install Metamask!')
         }
        
     }
-     return {provider,signer,account,connectWallet}
+     return {provider,signer,account,connectWallet,isConnected}
 }
