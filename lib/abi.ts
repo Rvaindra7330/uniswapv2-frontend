@@ -1,5 +1,5 @@
 export const FACTORY_ABI = [
-    "function getpair(address,address) view returns (address)"
+    "function getPair(address,address) view returns (address)"
 ] as const;
 
 export const PAIR_ABI = [

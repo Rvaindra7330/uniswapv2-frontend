@@ -7,7 +7,7 @@ export default function Navbar() {
   const { account, isConnected,connectWallet } = useWeb3();
 
   return (
-    <nav className="border-b-0 shadow-2xl p-4">
+    <nav className="border-b-0 shadow-xl p-4">
       <div className="container mx-auto flex justify-between">
         <h1 className="text-xl font-bold text-pink-500 font-serif">Uniswap Clone</h1>
         <div className="space-x-4">
@@ -15,7 +15,7 @@ export default function Navbar() {
           <Link href="/swap" className="hover:underline text-gray-500">Swap</Link>
           <Link href="/liquidity" className="hover:underline text-gray-500">Liquidity</Link>
 
-          <span>{isConnected?`account : ${account}`:(
+          <span className="text-gray-500">{isConnected?`Account : ${account}`:(
     <button
             type="button"
             onClick={connectWallet}
