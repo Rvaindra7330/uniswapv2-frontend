@@ -1,22 +1,25 @@
 "use client"
 
 import { useWeb3 } from "@/hook/useWeb3"
-import { CONTRACT_ADDRESSES } from "@/lib/constants"
+import { CONTRACT_ADDRESSES, TOKEN_DECIMALS } from "@/lib/constants"
 import { useEffect, useState } from "react"
 import  {ethers} from 'ethers'
 import { ERC20_ABI, FACTORY_ABI, PAIR_ABI } from "@/lib/abi"
-import { toast } from "react-toastify"
+import { toast, ToastContainer } from "react-toastify"
 
 export default function Swap(){
     const { isConnected,connectWallet,signer} =useWeb3()
      const [fromToken,setFromToken]=useState(CONTRACT_ADDRESSES.tokenA)
      const [toToken,setToToken] = useState(CONTRACT_ADDRESSES.tokenB)
-     const [amountIn,setAmountIn]= useState('')
+    const [amountIn, setAmountIn] = useState<string>("");
+    const [amountInWei, setAmountInWei] = useState<bigint>(0n);
      const [amountOut,setAmountOut]= useState('')
      const [pairAddress,setPairAddress]=useState('')
      const [isSwapping,setIsSwapping]=useState(false)
      const [fromAmount,setFromAmount]=useState('')
      const [toAmount, setToAmount] = useState('');
+     
+
 
      useEffect(()=>{
         if(signer) findPairAddress()
@@ -26,11 +29,13 @@ export default function Swap(){
         const factory = new ethers.Contract(CONTRACT_ADDRESSES.factory,FACTORY_ABI,signer)
         const pair = await factory.getPair(CONTRACT_ADDRESSES.tokenA,CONTRACT_ADDRESSES.tokenB)
         setPairAddress(pair)
+        console.log('pair',pair)
      }
 
      const calculateOutput = async (amountIn:string)=>{
-        if(!pairAddress || !amountIn) return;
-        setAmountIn(amountIn)
+        if(!pairAddress || !amountIn || amountIn.trim()==='') return;
+        const inputAmount = ethers.parseUnits(amountIn,TOKEN_DECIMALS)
+        setAmountInWei(inputAmount)
 
         const pair= new ethers.Contract(pairAddress,PAIR_ABI,signer)
         const [reserveA,reserveB] = await Promise.all([pair.reserveA(),pair.reserveB()]
@@ -47,13 +52,14 @@ export default function Swap(){
         setIsSwapping(true)
         try{
             const tokenContract = new ethers.Contract(fromToken,ERC20_ABI,signer)
-            const approveTx = await tokenContract.approve(pairAddress,ethers.parseEther(amountIn))
+            const approveTx = await tokenContract.approve(pairAddress,amountInWei)
             await approveTx.wait();
 
             const pair = new ethers.Contract(pairAddress,PAIR_ABI,signer)
-            const SwapTx= await pair.swap(fromToken,ethers.parseEther(amountIn))
+            const SwapTx= await pair.swap(fromToken,amountInWei)
             await SwapTx.wait();
             toast.success("Swap successful!")
+            setAmountIn('')
         } catch(e){
             console.error(e)
            toast.error("Swap failed")
@@ -62,6 +68,7 @@ export default function Swap(){
         }
      }
     return <div className="flex flex-col justify-center items-center h-screen bg-slate-50">
+        <ToastContainer position="top-right" autoClose={5000}/>
         <h1 className="text-4xl font-bold font-serif mb-6 mt-2">Swap anytime,<br></br>anywhere.</h1>
     <input type="text" value={fromAmount} onChange={(e)=>{
         setFromAmount(e.target.value)
