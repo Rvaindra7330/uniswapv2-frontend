@@ -44,7 +44,7 @@ export default function Swap(){
     const reserveOut=fromToken===CONTRACT_ADDRESSES.tokenA?reserveB:reserveA;
 
     const calculatedOut = (reserveOut * ethers.parseEther(amountIn))/(reserveIn+ethers.parseEther(amountIn))
-    setAmountOut(ethers.formatEther(calculatedOut))
+    setToAmount(ethers.formatEther(calculatedOut))
 
      }
      const handleSwap = async ()=>{
@@ -74,7 +74,7 @@ export default function Swap(){
         setFromAmount(e.target.value)
         calculateOutput(e.target.value)
     }} placeholder="enter the amount to swap" className="p-5 mb-2 w-100  border border-default-medium rounded-full focus:ring-brand focus:border-brand" />
-    <input type="text" value={toAmount} readOnly placeholder="you will receive" className="p-5 mb-2 w-100 rounded-full  border border-default-medium focus:ring-brand focus:border-brand" />
+    <input type="text" value={toAmount?toAmount:''} readOnly placeholder="you will receive" className="p-5 mb-2 w-100 rounded-full  border border-default-medium focus:ring-brand focus:border-brand" />
     <div className="flex space-x-4 mb-4">
     <select 
         value={fromToken} 
