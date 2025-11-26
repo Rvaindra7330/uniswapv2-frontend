@@ -19,6 +19,8 @@ export default function Liquidity() {
     const [amountA, setAmountA] = useState<string>("");
     const [amountB, setAmountB] = useState<string>("");
 
+    const [isAdding,setIsAdding]=useState(false)
+
     const tokenA = CONTRACT_ADDRESSES.tokenA;
     const tokenB = CONTRACT_ADDRESSES.tokenB;
 
@@ -36,8 +38,6 @@ export default function Liquidity() {
 
             const pair = await factory.getPair(tokenA, tokenB);
             setPairAddress(pair);
-            toast.success("pair created")
-            console.log("pair", pair)
 
             if (pair === ethers.ZeroAddress) {
                 toast.error("Pair not created. Use createPair() first");
@@ -90,14 +90,14 @@ export default function Liquidity() {
         }
 
         try {
-            
+            setIsAdding(true)
             const amountAWei = ethers.parseUnits(amountA, TOKEN_DECIMALS);
             const amountBWei = ethers.parseUnits(amountB, TOKEN_DECIMALS);
 
             
             const tokenAContract = new ethers.Contract(tokenA, ERC20_ABI, signer);
             const approveA = await tokenAContract.approve(pairAddress, amountAWei);
-            console.log("in2")
+            
             await approveA.wait();
 
             const tokenBContract = new ethers.Contract(tokenB, ERC20_ABI, signer);
@@ -118,27 +118,29 @@ export default function Liquidity() {
         } catch (err) {
             console.error(err);
             toast.error("Failed to add liquidity");
+        }finally{
+            setIsAdding(false)
         }
     };
 
     return (
-        <div className="flex flex-col items-center p-8">
+        <div className="flex flex-col justify-center h-screen items-center p-8 bg-slate-200">
             <ToastContainer position="top-center" autoClose={5000} />
-            <h1 className="text-3xl font-bold mb-6">Add Liquidity</h1>
+            <h1 className="text-3xl font-bold mb-6 font-serif">Add Liquidity</h1>
 
-            <div className="mb-4">
+            <div className="mb-4 text-gray-600">
                 <p><strong>Pair Address:</strong> {pairAddress}</p>
                 <p><strong>Reserve A:</strong> {reserveA}</p>
                 <p><strong>Reserve B:</strong> {reserveB}</p>
             </div>
 
-            <div className="border p-6 rounded-xl w-[350px]">
+            <div >
                 <input
                     type="text"
                     placeholder="Amount Token A"
                     value={amountA}
                     onChange={(e) => setAmountA(e.target.value)}
-                    className="w-full mb-4 p-3 border rounded"
+                   className="bg-gray-50 mb-2  border border-gray-300 text-gray-900 text-sm rounded-lg outline-none  block w-80 p-2.5" 
                 />
 
                 <input
@@ -146,14 +148,14 @@ export default function Liquidity() {
                     placeholder="Amount Token B"
                     value={amountB}
                     onChange={(e) => setAmountB(e.target.value)}
-                    className="w-full mb-4 p-3 border rounded"
+                    className="bg-gray-50 border mb-2 border-gray-300 text-gray-900 text-sm rounded-lg outline-none  block w-80 p-2.5"
                 />
 
                 <button
                     onClick={addLiquidity}
-                    className="w-full bg-pink-600 text-white p-3 rounded hover:bg-pink-700"
+                    className="w-full bg-pink-500 text-white p-3 rounded-full hover:bg-pink-700"
                 >
-                    Add Liquidity
+                   {isAdding?"Adding..":"Add Liquidity"}
                 </button>
             </div>
         </div>

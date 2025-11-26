@@ -67,7 +67,7 @@ export default function Swap(){
             setIsSwapping(false)
         }
      }
-    return <div className="flex flex-col justify-center items-center h-screen bg-slate-50">
+    return <div className="flex flex-col justify-center items-center h-screen bg-slate-200">
         <ToastContainer position="top-right" autoClose={5000}/>
         <h1 className="text-4xl font-bold font-serif mb-6 mt-2">Swap anytime,<br></br>anywhere.</h1>
     <input type="text" value={fromAmount} onChange={(e)=>{

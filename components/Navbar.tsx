@@ -11,9 +11,9 @@ export default function Navbar() {
       <div className="container mx-auto flex justify-between">
         <h1 className="text-xl font-bold text-pink-500 font-serif">Uniswap Clone</h1>
         <div className="space-x-4">
-          <Link href="/" className="hover:underline text-gray-500">Home</Link>
-          <Link href="/swap" className="hover:underline text-gray-500">Swap</Link>
-          <Link href="/liquidity" className="hover:underline text-gray-500">Liquidity</Link>
+          <Link href="/" className="hover: text-gray-500">Home</Link>
+          <Link href="/swap" className="hover: text-gray-500">Swap</Link>
+          <Link href="/liquidity" className="hover: text-gray-500">Liquidity</Link>
 
           <span className="text-gray-500">{isConnected?`Account : ${account}`:(
     <button
