@@ -130,8 +130,8 @@ export default function Liquidity() {
 
             <div className="mb-4 text-gray-600">
                 <p><strong>Pair Address:</strong> {pairAddress}</p>
-                <p><strong>Reserve A:</strong> {reserveA}</p>
-                <p><strong>Reserve B:</strong> {reserveB}</p>
+                <p><strong>TLR Reserve:</strong> {reserveA}</p>
+                <p><strong>BRP Reserve:</strong> {reserveB}</p>
             </div>
 
             <div >

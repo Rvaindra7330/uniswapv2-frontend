@@ -21,13 +21,13 @@ export default function WalletConnection() {
           </button>
         </div>
       ) : (
-        <div className="flex flex-col justify-center items-center h-screen">
-          <Link href="/swap" className="border p-6 rounded-lg hover:shadow-lg transition mb-5 w-100 bg-pink-500 hover:bg-slate-900">
+        <div className="flex flex-col justify-center items-center h-screen bg-slate-200">
+          <Link href="/swap" className="border p-6 rounded-lg hover:shadow-lg transition mb-5 w-100 bg-slate-500 hover:bg-slate-900">
             <h2 className="text-xl font-semibold mb-2">Swap Tokens</h2>
             <p>Exchange TLR for BRP and vice versa</p>
           </Link>
           
-          <Link href="/liquidity" className="border p-6 rounded-lg hover:shadow-lg transition w-100  bg-pink-500 hover:bg-slate-900">
+          <Link href="/liquidity" className="border p-6 rounded-lg hover:shadow-lg transition w-100  bg-slate-500 hover:bg-slate-900">
             <h2 className="text-xl font-semibold mb-2">Provide Liquidity</h2>
             <p>Add tokens to the pool</p>
           </Link>

@@ -20,9 +20,17 @@ export default function Swap(){
      const [toAmount, setToAmount] = useState('');
      
 
-
+    useEffect(()=>{
+        if(fromToken===CONTRACT_ADDRESSES.tokenA) setToToken(CONTRACT_ADDRESSES.tokenB)
+        if(fromToken===CONTRACT_ADDRESSES.tokenB) setToToken(CONTRACT_ADDRESSES.tokenA)   
+    },[fromToken])
+    useEffect(()=>{
+        if(toToken===CONTRACT_ADDRESSES.tokenA) setFromToken(CONTRACT_ADDRESSES.tokenB)
+        if(toToken===CONTRACT_ADDRESSES.tokenB) setFromToken(CONTRACT_ADDRESSES.tokenA)   
+    },[toToken])
      useEffect(()=>{
         if(signer) findPairAddress()
+            
      },[signer])
     
      const findPairAddress = async()=>{
@@ -43,8 +51,9 @@ export default function Swap(){
     const reserveIn= fromToken===CONTRACT_ADDRESSES.tokenA ?reserveA:reserveB;
     const reserveOut=fromToken===CONTRACT_ADDRESSES.tokenA?reserveB:reserveA;
 
-    const calculatedOut = (reserveOut * ethers.parseEther(amountIn))/(reserveIn+ethers.parseEther(amountIn))
-    setToAmount(ethers.formatEther(calculatedOut))
+    const amountInWeiwithFee = (inputAmount* 997n) / 1000n;
+    const calculatedOut = (reserveOut * amountInWeiwithFee)/(reserveIn+amountInWeiwithFee)
+    setToAmount(ethers.formatUnits(calculatedOut,TOKEN_DECIMALS))
 
      }
      const handleSwap = async ()=>{
@@ -60,6 +69,7 @@ export default function Swap(){
             await SwapTx.wait();
             toast.success("Swap successful!")
             setAmountIn('')
+            setToAmount('')
         } catch(e){
             console.error(e)
            toast.error("Swap failed")
@@ -78,11 +88,14 @@ export default function Swap(){
     <div className="flex space-x-4 mb-4">
     <select 
         value={fromToken} 
-        onChange={(e) => setFromToken(e.target.value)}
-        className="p-2 border rounded"
-    >
+        onChange={(e) =>{ setFromToken(e.target.value)
+            
+        }}
+    
+        className="p-2 border rounded-full"
+    >   
         <option value={CONTRACT_ADDRESSES.tokenA}>TLR</option>
-        <option value={CONTRACT_ADDRESSES.tokenB}>BRP</option>
+        <option value={CONTRACT_ADDRESSES.tokenB} >BRP</option>
     </select>
     
     <span>→</span>
@@ -90,10 +103,11 @@ export default function Swap(){
     <select 
         value={toToken} 
         onChange={(e) => setToToken(e.target.value)}
-        className="p-2 border rounded"
+        className="p-2 border rounded-full"
     >
-        <option value={CONTRACT_ADDRESSES.tokenB}>BRP</option>
-        <option value={CONTRACT_ADDRESSES.tokenA}>TLR</option>
+       
+        <option value={CONTRACT_ADDRESSES.tokenB} >BRP</option>
+        <option value={CONTRACT_ADDRESSES.tokenA} >TLR</option>
     </select>
 </div>
     <button onClick={!isConnected ? connectWallet : handleSwap}
