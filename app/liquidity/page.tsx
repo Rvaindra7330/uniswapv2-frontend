@@ -40,7 +40,7 @@ export default function Liquidity() {
             setPairAddress(pair);
 
             if (pair === ethers.ZeroAddress) {
-                toast.error("Pair not created. Use createPair() first");
+                toast.error("Pair does not exist!create pair");
             }
         } catch (err) {
             console.error(err);

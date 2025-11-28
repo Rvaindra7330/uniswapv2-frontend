@@ -11,8 +11,7 @@ export const useWeb3 = () => {
 
     const didInit = useRef(false);
 
-    useEffect(() => {
-        
+    useEffect(() => {  
     if (typeof window === "undefined" || !(window as any).ethereum) return;
 
     const provider = new ethers.BrowserProvider((window as any).ethereum);
